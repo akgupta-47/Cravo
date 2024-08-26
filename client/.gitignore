@@ -1,0 +1,13 @@
+#next
+client/node_modules
+client/pnpm-lock.yaml
+
+#fastapi
+fastapi/__pycache__
+
+#go
+go-server/go.sum
+
+#node
+node-mongo/node_modules
+node-mongo/pnpm-lock.yaml
