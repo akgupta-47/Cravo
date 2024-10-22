@@ -1,5 +1,5 @@
-from sqlmodel import SQLModel, Field
-from datetime import datetime
+from database import Base
+from sqlalchemy import Column, Integer, String, TIMESTAMP, Boolean, text, ForeignKey, Enum
 import enum 
 
 class StatusEnum(enum.Enum):
@@ -10,16 +10,15 @@ class StatusEnum(enum.Enum):
     OTW = 'on_the_way'
     REACHED = 'reached'
     DELIVERED = 'delivered'
-    
-class TrackBase(SQLModel):
-    status: StatusEnum
-    order_id: str
-    rider_id: str
-    etam: int # estimated time of arrival in minutes
-    profile_id: str
-    shop_id: str
-    created_at: datetime = Field(default=datetime.UTC)
-    
-class Track(TrackBase, table=True):
-    id = str = Field(default=None, primary_key=True)
-    
+
+class Track(Base):
+    __tablename__ = "track"
+
+    id = Column(String,primary_key=True,nullable=False)
+    status = Column(Enum(StatusEnum),nullable=False, server_default='PENDING')
+    order = Column(String,nullable=False)
+    rider = Column(String,nullable=False)
+    etam = Column(String,nullable=False) # Estimated time to arrival in minutes
+    profile_id = Column(String,nullable=False)
+    shop = Column(String,nullable=False)
+    created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))

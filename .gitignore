@@ -4,6 +4,9 @@ client/pnpm-lock.yaml
 
 #fastapi
 fastapi/__pycache__
+fastapi/models/__pycache__
+fastapi/.venv
+fastapi/.env
 
 #go
 go-server/go.sum

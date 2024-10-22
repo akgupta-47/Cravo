@@ -1,8 +1,8 @@
-from sqlmodel import SQLModel, Field
-from datetime import datetime
+from database import Base
+from sqlalchemy import Column, Integer, String, TIMESTAMP, Boolean, text, ForeignKey, Double, Enum
 import enum 
 
-class Status(enum.Enum):
+class StatusEnum(enum.Enum):
     PENDING = 'pending'
     COMPLETED = 'completed'
     FAILED = 'failed'
@@ -17,16 +17,16 @@ class Indicator(enum.Enum):
     DFC = 'debit_from_consumer'
     CTU = 'credit_to_user'
 
-class PaymentBase(SQLModel):
-    status: Status
-    method: PaymentMethod
-    amount: float
-    pfee: float
-    delivery: float
-    user_id: str
-    shop_id: str
-    dc_indicator: Indicator
-    created_at: datetime = Field(default=datetime.UTC)
+class Payment(Base):
+    __tablename__ = "payments"
 
-class Payment(PaymentBase, table=True):
-    id = str = Field(default=None, primary_key=True)
+    id = Column(String,primary_key=True,nullable=False)
+    status = Column(Enum(StatusEnum),nullable=False, server_default='PENDING')
+    method = Column(Enum(PaymentMethod),nullable=False)
+    amount = Column(Double,nullable=False)
+    delivery = Column(Double,nullable=False) # delivery fee
+    pfee = Column(Double,nullable=False) # platform fee
+    user_id = Column(String,nullable=False)
+    shop_id = Column(String,nullable=False)
+    dc_indicator = Column(String,nullable=False, server_default='DFC')
+    created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))

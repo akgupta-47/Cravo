@@ -1,11 +1,11 @@
-from sqlmodel import SQLModel, Field
-from datetime import datetime
+from database import Base
+from sqlalchemy import Column, Integer, String, TIMESTAMP, Boolean, text, ForeignKey, Double, Enum
 
-class OrderProductMapperBase(SQLModel):
-    order_id: str
-    product_id: str
-    quantity: int
-    created_at: datetime = Field(default=datetime.UTC)
+class OrderProductMapper(Base):
+    __tablename__ = "order_product"
 
-class OrderProductMapper(OrderProductMapperBase, table=True):
-    id = str = Field(default=None, primary_key=True)
+    id = Column(Integer,primary_key=True,nullable=False)
+    product_id = Column(String,nullable=False)
+    order_id = Column(String,nullable=False)
+    quantity = Column(String,nullable=False)
+    created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
