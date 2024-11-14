@@ -9,4 +9,8 @@ class Order(Base):
     track_id = Column(String,nullable=False)
     user_id = Column(String,nullable=False)
     shop_id = Column(String,nullable=False)
+    address_id  = Column(String,nullable=False)
+    payment_id = Column(String,nullable=False)
+    rating = Column(String, nullable=True, server_default=0)
     created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
+    arrived_at = Column(TIMESTAMP(timezone=True))

@@ -3,11 +3,11 @@ from fastapi import FastAPI
 from fastapi import HTTPException, Depends
 from sqlalchemy.orm import Session
 import models.Post
-import schemas.PostSchema as postSchema
+import data.PostSchema as postSchema
 import models
 from database import Base, engine, get_db
-import schemas.ItemSchema as item
-from routers.OrdersRouter import order_router
+import data.ItemSchema as item
+from controllers.OrdersRouter import order_router
 
 from dotenv import load_dotenv
 
