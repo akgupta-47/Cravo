@@ -1,5 +1,6 @@
 from database import Base
-from sqlalchemy import Column, Integer, String, TIMESTAMP, Boolean, text, ForeignKey, Enum
+from sqlalchemy import Column, String, TIMESTAMP, Boolean, text, ForeignKey
+from sqlalchemy.dialects.postgresql import ENUM 
 import enum 
 
 class StatusEnum(enum.Enum):
@@ -14,11 +15,15 @@ class StatusEnum(enum.Enum):
 class Track(Base):
     __tablename__ = "track"
 
-    id = Column(String,primary_key=True,nullable=False)
-    status = Column(Enum(StatusEnum),nullable=False, server_default='PENDING')
-    order = Column(String,nullable=False)
-    rider = Column(String,nullable=False)
-    etam = Column(String,nullable=False) # Estimated time to arrival in minutes
-    profile_id = Column(String,nullable=False)
-    shop = Column(String,nullable=False)
-    created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
+    id = Column(String, primary_key=True, nullable=False)
+    status = Column(
+        ENUM(StatusEnum, name="statusenum", create_type=False), 
+        nullable=False,
+        server_default=text("'pending'::statusenum")
+    )
+    order = Column(String, ForeignKey("orders.id"), nullable=False)  
+    rider = Column(String, nullable=False)  
+    etam = Column(String, nullable=False)  # Estimated time to arrival in minutes
+    profile_id = Column(String, nullable=False)  
+    created_at = Column(TIMESTAMP(timezone=True), server_default=text("now()")) 
+

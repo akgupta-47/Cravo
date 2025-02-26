@@ -5,7 +5,7 @@
 #     comment: str
     
 #     class Config:
-#         orm_mode = True
+#         from_attributes = True
 
 # class PostBase(BaseModel):
 #     content: str
@@ -13,12 +13,12 @@
 #     comments: List[CommentsBase]
 
 #     class Config:
-#         orm_mode = True
+#         from_attributes = True
 
 
 # class CreatePost(PostBase):
 #     class Config:
-#         orm_mode = True
+#         from_attributes = True
 from pydantic import BaseModel
 
 class PostBase(BaseModel):
@@ -26,8 +26,8 @@ class PostBase(BaseModel):
     title: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class CreatePost(PostBase):
     class Config:
-        orm_mode = True
+        from_attributes = True

@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 from uuid import UUID
 
 # do we need offered price ??
-class Product:
+class Product(BaseModel):
     id: str
     quantity: int
     available: bool
@@ -15,8 +15,14 @@ class Order(BaseModel):
     track_id: str
     user_id: str
     shop_id: str
+    address_id: str
     payment_id: str
-    rating: int
-    feedback: str
+    status: str
+    bid_id: int
+    feedback_id: str
     products: List[Product]
+    arrived_at: str
+    
+    class Config:
+        from_attributes = True
     
