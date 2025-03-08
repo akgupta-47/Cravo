@@ -1,4 +1,4 @@
-package db
+package database
 
 import (
 	"context"
@@ -21,6 +21,7 @@ const dbName = "authgo"
 
 var Mgi MongoInstance
 
+// ConnectDB initializes the MongoDb connection
 func ConnectDB() error {
 	err := godotenv.Load(".env")
 	if err != nil {

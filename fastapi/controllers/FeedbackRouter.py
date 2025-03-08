@@ -156,7 +156,4 @@ async def update_feedback_route(
     db: AsyncSession = Depends(get_db),
 ):
 
-    updated_feedback = await feedbackService.update_feedback(
-        db, feedback_id, feedback_data
-    )
-    return updated_feedback
+    await feedbackService.update_feedback(db, feedback_id, feedback_data)

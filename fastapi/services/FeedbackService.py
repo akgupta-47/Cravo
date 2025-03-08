@@ -49,9 +49,7 @@ async def get_feedback_by_id(
     return result.scalars().first()  # Fetch the first matching feedback or None
 
 
-async def get_product_feedback_by_id(
-    db: AsyncSession, feedback_id: str
-) -> list[ProductFeedbackModel]:
+async def get_product_feedback_by_id(db: AsyncSession, feedback_id: str):
     """Fetch feedback by its ID and return as a list."""
     stmt = select(ProductFeedbackModel).filter(
         ProductFeedbackModel.feedback_id == feedback_id
@@ -92,21 +90,32 @@ async def update_feedback(
                 ProductFeedbackModel.feedback_id == feedback_id
             )
         )
-        existing_feedback = {p.id: p for p in existing_feedback.scalars().all()}
+
+        existing_feedback = {p.product_id: p for p in existing_feedback.scalars().all()}
 
         for feedback in product_feedback_list:
-            if feedback.get("id") in existing_feedback:
+            if feedback.get("product_id") in existing_feedback:
                 # **Update existing feedback**
                 stmt = (
                     update(ProductFeedbackModel)
-                    .where(ProductFeedbackModel.id == feedback["id"])
-                    .values(feedback)
+                    .where(
+                        ProductFeedbackModel.feedback_id == feedback_id,
+                        ProductFeedbackModel.product_id == feedback.get("product_id"),
+                    )
+                    .values(
+                        rating_product=feedback.get("rating"),
+                        feedback_product=feedback.get("feedback"),
+                    )
                 )
                 await db.execute(stmt)
             else:
                 # **Insert new feedback (if ID is missing)**
-                new_feedback = ProductFeedbackModel(**feedback, feedback_id=feedback_id)
+                new_feedback = ProductFeedbackModel(
+                    feedback_id=feedback_id,
+                    product_id=feedback.get("product_id"),
+                    rating_product=feedback.get("rating"),
+                    feedback_product=feedback.get("feedback"),
+                )
                 db.add(new_feedback)
 
-    await db.commit()
-    return updated_feedback
+    await db.flush()
