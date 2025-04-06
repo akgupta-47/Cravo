@@ -1,11 +1,17 @@
-from sqlmodel import SQLModel, Field
-from datetime import datetime
+from database import Base
+from sqlalchemy import Column, String, TIMESTAMP, Boolean, text
+from sqlalchemy.schema import PrimaryKeyConstraint
 
-class OrderProductMapperBase(SQLModel):
-    order_id: str
-    product_id: str
-    quantity: int
-    created_at: datetime = Field(default=datetime.UTC)
+class OrderProductMapper(Base):
+    __tablename__ = "order_product"
 
-class OrderProductMapper(OrderProductMapperBase, table=True):
-    id = str = Field(default=None, primary_key=True)
+    product_id = Column(String, nullable=False)
+    order_id = Column(String, nullable=False)
+    quantity = Column(String, nullable=False)
+    available = Column(Boolean, nullable=False)
+    created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
+
+    # Ensure __table_args__ is correctly formatted as a tuple
+    __table_args__ = (
+        PrimaryKeyConstraint('product_id', 'order_id'),
+    )

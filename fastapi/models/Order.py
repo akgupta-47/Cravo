@@ -1,13 +1,27 @@
-from sqlmodel import SQLModel, Field
-from datetime import datetime
+from database import Base
+from sqlalchemy import Column, Integer, String, TIMESTAMP, Boolean, text, ForeignKey, Double, Enum
 
-class OrderBase(SQLModel):
-    total: float = Field(default_factory=0)
-    track_id: str
-    user_id: str
-    shop_id: str
-    created_at: datetime = Field(default=datetime.UTC)
-    
-class Order(OrderBase, table = True):
-    id: str = Field(default=None, primary_key= True)
-    
+''' <-
+@Parent = []
+@Description = All the API spec related to Orders CRUD operations
+@Table = Products
+-> '''
+class Order(Base):
+    __tablename__ = "orders"
+
+    ''' <-
+    @Fields
+    @PKeys = [id]
+    @FKeys = []
+    -> '''
+    id = Column(String,primary_key=True,nullable=False)
+    total = Column(Double,nullable=False)
+    track_id = Column(String,nullable=False)
+    user_id = Column(String,nullable=False)
+    shop_id = Column(String,nullable=False)
+    address_id  = Column(String,nullable=False)
+    payment_id = Column(String,nullable=False)
+    bid_id = Column(String,nullable=True)
+    feedback_id = Column(String, nullable=True)
+    created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
+    arrived_at = Column(TIMESTAMP(timezone=True))
