@@ -16,4 +16,6 @@ golang/go.sum
 node-mongo/node_modules
 node-mongo/pnpm-lock.yaml
 
+Docker/.env
+
 *.env

@@ -1,4 +1,4 @@
-version: '2'
+# version: '3.8'
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
@@ -7,6 +7,9 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - 22181:2181
+    profiles:
+    - kafka
+
   
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -21,3 +24,160 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    profiles:
+      - kafka
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.3
+    container_name: es01
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - elastic
+    healthcheck:
+      test: curl -s http://localhost:9200 | grep -q "cluster_name"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    profiles:
+      - elastic
+
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.17.3
+    container_name: kibana01
+    ports:
+      - 5601:5601
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+    networks:
+      - elastic
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    profiles:
+      - elastic
+
+  postgres:
+    image: postgres:14
+    container_name: pg01
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - 3000:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - app
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d cravo_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  fastapi-pg:
+    image: cravo-fastapi
+    build:
+      context: ../fastapi
+      dockerfile: ../fastapi/Dockerfile
+    container_name: fastapi-app
+    ports:
+      - 8000:8000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      ELASTIC_SEARCH_SERVER: http://localhost:9200
+    networks:
+      - app
+      - elastic
+    # env_file:
+    #   - .env
+
+  redis:
+    image: redis:7
+    container_name: redis01
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    command: [
+      "redis-server", 
+      "--save", "60", "1", 
+      "--loglevel", "warning",
+      "--maxmemory", "100mb", 
+      "--maxmemory-policy", "allkeys-lru"
+    ]
+    networks:
+      - app
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mongodb:
+    image: mongo:6.0
+    container_name: mongo-db
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+    volumes:
+      - mongodbdata:/data/db
+    networks:
+      - app
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    profiles:
+      - mongodb
+
+  go-service:
+    image: cravo-golang
+    build:
+      context: ../golang
+      dockerfile: ../golang/Dockerfile
+    container_name: cravo-go
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    ports:
+      - "8080:4000"
+    networks:
+      - app
+    environment:
+      MONGODB_URL: ${MONGO_URL}
+    profiles:
+      - golang
+
+networks:
+  elastic:
+    driver: bridge
+  app:
+    driver: bridge
+
+volumes:
+  pgdata:
+  redisdata:
+  mongodbdata:
+  esdata1:

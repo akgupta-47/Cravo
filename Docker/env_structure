@@ -1,0 +1,9 @@
+ELASTIC_PASSWORD=<your-value>
+POSTGRES_USER=<your-value>
+POSTGRES_PASSWORD=<your-value>
+POSTGRES_DB=<your-value>
+
+MONGO_INITDB_ROOT_USERNAME=<your-value>
+MONGO_INITDB_ROOT_PASSWORD=<your-value>
+MONGO_INITDB_DATABASE=<your-value>
+MONGO_URL=<your-value>
