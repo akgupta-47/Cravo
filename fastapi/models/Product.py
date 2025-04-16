@@ -44,8 +44,9 @@ class Product(Base):
     @Enums = [Product_Category,Product_SubCategory]
     -> """
     id = Column(String, primary_key=True, nullable=False)
-    family_id = Column(String, primary_key=True, nullable=False)
-    name = Column(String, nullable=True)
+    family_id = Column(String, nullable=True)
+    image = Column(String, nullable=False)
+    name = Column(String, nullable=False)
     description = Column(String, nullable=True)
     country_of_origin = Column(String, nullable=False)
     fssai = Column(String, nullable=False)

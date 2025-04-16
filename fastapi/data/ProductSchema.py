@@ -1,8 +1,8 @@
 from datetime import datetime
 from enum import Enum
-from typing import Optional
+from typing import Optional, Union
 
-from pydantic import BaseModel, Field
+from pydantic import UUID4, BaseModel, Field
 
 
 class Category(str, Enum):
@@ -20,9 +20,10 @@ class SubCategory(str, Enum):
 
 
 class ProductBase(BaseModel):
-    id: str
-    family_id: str = None
-    name: Optional[str] = None
+    id: Optional[Union[str, UUID4]] = None
+    family_id: Optional[str] = None
+    image: Optional[str] = None
+    name: str
     description: Optional[str] = None
     country_of_origin: str
     fssai: str
@@ -40,49 +41,16 @@ class ProductBase(BaseModel):
     created_at: Optional[datetime] = None
 
 
-class ProductCreate(ProductBase):
-    """Use this when creating a new product"""
-
-    pass
-
-
-class ProductRead(ProductBase):
-    """Use this for responses"""
-
-    created_at: datetime
-
-    class Config:
-        orm_mode = True
-
-
-class ProductUpdate(BaseModel):
-    """Use this for updating existing product"""
-
-    name: Optional[str] = None
-    description: Optional[str] = None
-    country_of_origin: Optional[str] = None
-    fssai: Optional[str] = None
-    manufacturer: Optional[str] = None
-    ingredients: Optional[str] = None
-    manufacturer_address: Optional[str] = None
-    nutritional_info: Optional[str] = None
-    unit: Optional[float] = None
-    price: Optional[float] = None
-    weight: Optional[float] = None
-    shelf_life: Optional[str] = None
-    category: Optional[Category] = None
-    sub_type: Optional[SubCategory] = None
-    status: Optional[str] = None
-
-
 class ProductESearch(BaseModel):
     """Use this for updating existing product"""
 
     id: str
     family_id: str = None
+    image: Optional[str] = None
     name: Optional[str] = None
     description: Optional[str] = None
     price: Optional[float] = None
+    unit: Optional[float] = None
     weight: Optional[float] = None
     category: Optional[Category] = None
     sub_type: Optional[SubCategory] = None
