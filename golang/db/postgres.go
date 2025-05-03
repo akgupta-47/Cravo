@@ -16,10 +16,12 @@ var DB *gorm.DB // Global variable to store DB connection
 // ConnectSqlDB initializes the PostgreSQL connection
 func ConnectSqlDB() error {
 
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatal("Error loading .env file")
-		return err
+	if _, err := os.Stat(".env"); err == nil {
+		err := godotenv.Load(".env")
+		if err != nil {
+			log.Fatal("Error loading .env file")
+			return err
+		}
 	}
 
 	user := os.Getenv("POSTGRES_USER")

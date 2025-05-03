@@ -1,9 +1,15 @@
 ELASTIC_PASSWORD=<your-value>
+POSTGRES_HOST=<your-value>
+POSTGRES_PORT=<your-value>
 POSTGRES_USER=<your-value>
 POSTGRES_PASSWORD=<your-value>
 POSTGRES_DB=<your-value>
+REDIS_PASSWORD=<your-value>
+POSTGRES_SSL_MODE=<your-value>
 
+SECRET_KEY=<your-value>
 MONGO_INITDB_ROOT_USERNAME=<your-value>
 MONGO_INITDB_ROOT_PASSWORD=<your-value>
 MONGO_INITDB_DATABASE=<your-value>
 MONGO_URL=<your-value>
+MONGO_URL_REMOTE=<your-value>

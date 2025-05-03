@@ -13,8 +13,8 @@ RUN go mod download
 # Copy the rest of the source code
 COPY . .
 
-# Build the Go app
-RUN go build -o app .
+# Build statically for Alpine
+RUN CGO_ENABLED=0 GOOS=linux go build -o app
 
 # Use a lightweight image for production
 FROM alpine:latest
@@ -27,6 +27,8 @@ WORKDIR /root/
 
 # Copy binary from builder stage
 COPY --from=builder /app/app .
+
+RUN chmod +x ./app
 
 # Expose application port (change if your app uses a different port)
 EXPOSE 8080
