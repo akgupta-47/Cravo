@@ -1,28 +1,29 @@
 from datetime import datetime
 from enum import Enum
-from typing import Optional
+from typing import Optional, Union
 
-from pydantic import BaseModel, Field
+from pydantic import UUID4, BaseModel, Field
 
 
 class Category(str, Enum):
-    FOOD = "food"
-    STATIONARY = "stationary"
-    ELECTRICAL = "electrical"
-    PLUMBING = "plumbing"
-    ELECTRONICS = "electronics"
-    CLOTH = "cloth"
-    BASIC = "basic"
+    FOOD = "FOOD"
+    STATIONARY = "STATIONARY"
+    ELECTRICAL = "ELECTRICAL"
+    PLUMBING = "PLUBING"
+    ELECTRONICS = "ELECTRONICS"
+    CLOTH = "CLOTH"
+    BASIC = "BASIC"
 
 
 class SubCategory(str, Enum):
-    BASIC = "basic"
+    BASIC = "BASIC"
 
 
 class ProductBase(BaseModel):
-    id: str
-    family_id: str = None
-    name: Optional[str] = None
+    id: Optional[Union[str, UUID4]] = None
+    family_id: Optional[str] = None
+    image: Optional[str] = None
+    name: str
     description: Optional[str] = None
     country_of_origin: str
     fssai: str
@@ -40,24 +41,25 @@ class ProductBase(BaseModel):
     created_at: Optional[datetime] = None
 
 
-class ProductCreate(ProductBase):
-    """Use this when creating a new product"""
+class ProductESearch(BaseModel):
+    """Use this for updating existing product"""
 
-    pass
-
-
-class ProductRead(ProductBase):
-    """Use this for responses"""
-
-    created_at: datetime
-
-    class Config:
-        orm_mode = True
+    id: str
+    family_id: Optional[str] = None
+    image: Optional[str] = None
+    name: Optional[str] = None
+    description: Optional[str] = None
+    price: Optional[float] = None
+    unit: Optional[float] = None
+    weight: Optional[float] = None
+    category: Optional[Category] = None
+    sub_type: Optional[SubCategory] = None
+    status: Optional[str] = None
 
 
 class ProductUpdate(BaseModel):
-    """Use this for updating existing product"""
-
+    family_id: Optional[str] = None
+    image: Optional[str] = None
     name: Optional[str] = None
     description: Optional[str] = None
     country_of_origin: Optional[str] = None
@@ -70,19 +72,21 @@ class ProductUpdate(BaseModel):
     price: Optional[float] = None
     weight: Optional[float] = None
     shelf_life: Optional[str] = None
-    category: Optional[Category] = None
-    sub_type: Optional[SubCategory] = None
+    category: Optional[Category] = None  # ← no default
+    sub_type: Optional[SubCategory] = None  # ← no default
     status: Optional[str] = None
+    created_at: Optional[datetime] = None
 
 
-class ProductESearch(BaseModel):
+class ProductESearchUpdate(BaseModel):
     """Use this for updating existing product"""
 
-    id: str
-    family_id: str = None
+    family_id: Optional[str] = None
+    image: Optional[str] = None
     name: Optional[str] = None
     description: Optional[str] = None
     price: Optional[float] = None
+    unit: Optional[float] = None
     weight: Optional[float] = None
     category: Optional[Category] = None
     sub_type: Optional[SubCategory] = None

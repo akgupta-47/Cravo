@@ -1,16 +1,26 @@
+import os
+
+from dotenv import load_dotenv
+from elasticsearch import Elasticsearch
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
-import os
-from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
 
 # Ensure all required environment variables are set
-required_env_vars = ["POSTGRES_USER", "POSTGRES_PASSWORD", "POSTGRES_HOST", "POSTGRES_PORT", "POSTGRES_DB"]
+required_env_vars = [
+    "POSTGRES_USER",
+    "POSTGRES_PASSWORD",
+    "POSTGRES_HOST",
+    "POSTGRES_PORT",
+    "POSTGRES_DB",
+]
 missing_vars = [var for var in required_env_vars if not os.getenv(var)]
 if missing_vars:
-    raise ValueError(f"🚨 Missing required environment variables: {', '.join(missing_vars)}")
+    raise ValueError(
+        f"🚨 Missing required environment variables: {', '.join(missing_vars)}"
+    )
 
 # Get PostgreSQL credentials
 user = os.getenv("POSTGRES_USER")
@@ -32,13 +42,15 @@ Base = declarative_base()
 AsyncSessionLocal = sessionmaker(
     bind=async_engine,
     class_=AsyncSession,
-    expire_on_commit=False  # Keeps session open after commits
+    expire_on_commit=False,  # Keeps session open after commits
 )
+
 
 async def init_db():
     """Create tables asynchronously"""
     async with async_engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+
 
 # Database session dependency for FastAPI
 async def get_db():
@@ -53,6 +65,10 @@ async def get_db():
         finally:
             await db.close()  # Ensure session is closed
 
+
 async def close_db():
     """Ensure engine is properly disposed when app shuts down"""
     await async_engine.dispose()
+
+
+ES = Elasticsearch(os.getenv("ELASTIC_SEARCH_SERVER"))
