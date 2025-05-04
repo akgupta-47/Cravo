@@ -51,7 +51,7 @@ async def update_product(
         .returning(ProductModel)  # Returns the updated row
     )
     result = await db.execute(stmt)
-    fetched_product = result.fetchone()
+    fetched_product = result.scalars().first()
 
     if not fetched_product:
         raise AppError(

@@ -153,7 +153,7 @@ def update_product(
     id: str,
     update_product_fields: ProductSchema.ProductUpdate,
     db: AsyncSession = Depends(get_db),
-) -> ProductSchema.ProductESearch:
+) -> ProductSchema.ProductUpdate:
 
     updated_product = productService.update_product(id, update_product_fields, db)
 
