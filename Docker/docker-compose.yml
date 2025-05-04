@@ -149,8 +149,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    profiles:
-      - mongodb
 
   go-service:
     image: cravo-golang
@@ -167,8 +165,6 @@ services:
       - app
     environment:
       MONGODB_URL: ${MONGO_URL}
-    profiles:
-      - golang
 
 networks:
   elastic:

@@ -6,17 +6,17 @@ from pydantic import UUID4, BaseModel, Field
 
 
 class Category(str, Enum):
-    FOOD = "food"
-    STATIONARY = "stationary"
-    ELECTRICAL = "electrical"
-    PLUMBING = "plumbing"
-    ELECTRONICS = "electronics"
-    CLOTH = "cloth"
-    BASIC = "basic"
+    FOOD = "FOOD"
+    STATIONARY = "STATIONARY"
+    ELECTRICAL = "ELECTRICAL"
+    PLUMBING = "PLUBING"
+    ELECTRONICS = "ELECTRONICS"
+    CLOTH = "CLOTH"
+    BASIC = "BASIC"
 
 
 class SubCategory(str, Enum):
-    BASIC = "basic"
+    BASIC = "BASIC"
 
 
 class ProductBase(BaseModel):
@@ -45,7 +45,43 @@ class ProductESearch(BaseModel):
     """Use this for updating existing product"""
 
     id: str
-    family_id: str = None
+    family_id: Optional[str] = None
+    image: Optional[str] = None
+    name: Optional[str] = None
+    description: Optional[str] = None
+    price: Optional[float] = None
+    unit: Optional[float] = None
+    weight: Optional[float] = None
+    category: Optional[Category] = None
+    sub_type: Optional[SubCategory] = None
+    status: Optional[str] = None
+
+
+class ProductUpdate(BaseModel):
+    family_id: Optional[str] = None
+    image: Optional[str] = None
+    name: Optional[str] = None
+    description: Optional[str] = None
+    country_of_origin: Optional[str] = None
+    fssai: Optional[str] = None
+    manufacturer: Optional[str] = None
+    ingredients: Optional[str] = None
+    manufacturer_address: Optional[str] = None
+    nutritional_info: Optional[str] = None
+    unit: Optional[float] = None
+    price: Optional[float] = None
+    weight: Optional[float] = None
+    shelf_life: Optional[str] = None
+    category: Optional[Category] = None  # ← no default
+    sub_type: Optional[SubCategory] = None  # ← no default
+    status: Optional[str] = None
+    created_at: Optional[datetime] = None
+
+
+class ProductESearchUpdate(BaseModel):
+    """Use this for updating existing product"""
+
+    family_id: Optional[str] = None
     image: Optional[str] = None
     name: Optional[str] = None
     description: Optional[str] = None
