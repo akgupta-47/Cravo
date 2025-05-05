@@ -1,7 +1,5 @@
 github.com/IBM/sarama v1.43.2 h1:HABeEqRUh32z8yzY2hGB/j8mHSzC/HA9zlEjqFNCzSw=
 github.com/IBM/sarama v1.43.2/go.mod h1:Kyo4WkF24Z+1nz7xeVUFWIuKVV8RS3wM8mkvPKMdXFQ=
-github.com/akgupta-47/auth-gofib v0.0.0-20240618194154-b522871648ce h1:wuK50gI3xHjon2BFSVdZmAPjnWiQSdiNh/VjVOVdR1s=
-github.com/akgupta-47/auth-gofib v0.0.0-20240618194154-b522871648ce/go.mod h1:XKaNJEG9xo99q6FqM4Hj09Hpb6PlZgKnVJP0Pd9a5Fk=
 github.com/andybalholm/brotli v1.0.5 h1:8uQZIdzKmjc/iuPu7O2ioW48L81FgatrcpfFmiq/cCs=
 github.com/andybalholm/brotli v1.0.5/go.mod h1:fO7iG3H7G2nSZ7m0zPUDn85XEX2GTukHGRSepvi9Eig=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

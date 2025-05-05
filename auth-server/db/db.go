@@ -53,3 +53,8 @@ func GetUserCollection() *mongo.Collection {
 	collection := Mgi.Db.Collection("user")
 	return collection
 }
+
+func GetProfileCollection() *mongo.Collection {
+	collection := Mgi.Db.Collection("profile")
+	return collection
+}
