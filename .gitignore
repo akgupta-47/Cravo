@@ -9,8 +9,9 @@ fastapi/.venv
 fastapi/.env
 
 #go
-go-server/go.sum
+auth-server/go.sum
 golang/go.sum
+*.sum
 
 #node
 node-mongo/node_modules

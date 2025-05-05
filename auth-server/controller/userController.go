@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/akgupta-47/auth-gofib/db"
-	"github.com/akgupta-47/auth-gofib/helpers"
-	"github.com/akgupta-47/auth-gofib/models"
+	database "github.com/akgupta-47/auth-module/db"
+	"github.com/akgupta-47/auth-module/helpers"
+	"github.com/akgupta-47/auth-module/models"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
@@ -47,7 +47,7 @@ func VerifyPassword(userPassword string, providedPassword string) (bool, string)
 }
 
 func Signup(c *fiber.Ctx) error {
-	var userCollection = db.GetUserCollection()
+	var userCollection = database.GetUserCollection()
 	user := new(models.User)
 
 	if err := c.BodyParser(user); err != nil {
@@ -90,7 +90,7 @@ func Signup(c *fiber.Ctx) error {
 }
 
 func Login(c *fiber.Ctx) error {
-	var userCollection = db.GetUserCollection()
+	var userCollection = database.GetUserCollection()
 	user := new(models.User)
 	foundUser := new(models.User)
 
@@ -132,7 +132,7 @@ func Login(c *fiber.Ctx) error {
 }
 
 func GetUsers(c *fiber.Ctx) error {
-	var userCollection = db.GetUserCollection()
+	var userCollection = database.GetUserCollection()
 	if err := helpers.CheckUserType(c, "ADMIN"); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(models.ErrorJson{Error: err.Error()})
 	}
@@ -150,16 +150,28 @@ func GetUsers(c *fiber.Ctx) error {
 	startIndex := (page - 1) * recordsPerPage
 	startIndex, err = strconv.Atoi(c.Query("startIndex"))
 
-	matchStage := bson.D{{"$match", bson.D{{}}}}
-	groupStage := bson.D{{"$group", bson.D{
-		{"_id", bson.D{{"_id", "null"}}},
-		{"total_count", bson.D{{"$sum", 1}}},
-		{"data", bson.D{{"$push", "$$ROOT"}}}}}}
+	matchStage := bson.D{
+		{Key: "$match", Value: bson.D{}},
+	}
+	
+	groupStage := bson.D{
+		{Key: "$group", Value: bson.D{
+			{Key: "_id", Value: bson.D{{Key: "_id", Value: "null"}}},
+			{Key: "total_count", Value: bson.D{{Key: "$sum", Value: 1}}},
+			{Key: "data", Value: bson.D{{Key: "$push", Value: "$$ROOT"}}},
+		}},
+	}
+	
 	projectStage := bson.D{
-		{"$project", bson.D{
-			{"_id", 0},
-			{"total_count", 1},
-			{"user_items", bson.D{{"$slice", []interface{}{"$data", startIndex, recordsPerPage}}}}}}}
+		{Key: "$project", Value: bson.D{
+			{Key: "_id", Value: 0},
+			{Key: "total_count", Value: 1},
+			{Key: "user_items", Value: bson.D{
+				{Key: "$slice", Value: []interface{}{"$data", startIndex, recordsPerPage}},
+			}},
+		}},
+	}
+	
 
 	result, err := userCollection.Aggregate(c.Context(), mongo.Pipeline{matchStage, groupStage, projectStage})
 
@@ -176,7 +188,7 @@ func GetUsers(c *fiber.Ctx) error {
 }
 
 func GetUser(c *fiber.Ctx) error {
-	var userCollection = db.GetUserCollection()
+	var userCollection = database.GetUserCollection()
 	userId := c.Params("user_id")
 
 	if err := helpers.MatchUserTypeToUid(c, userId); err != nil {

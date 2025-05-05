@@ -4,19 +4,19 @@ import (
 	"log"
 	"os"
 
-	database "github.com/akgupta-47/go-server/db"
-	"github.com/akgupta-47/go-server/producer"
+	database "github.com/akgupta-47/auth-module/db"
+	"github.com/akgupta-47/auth-module/producer"
 	"github.com/gofiber/fiber/v2"
 
 	"github.com/gofiber/fiber/v2/middleware/logger"
 
-	"github.com/akgupta-47/auth-gofib/routes"
+	"github.com/akgupta-47/auth-module/routes"
 )
 
 func main() {
-	// if err := database.ConnectDB(); err != nil {
-	// 	log.Fatal(err)
-	// }
+	if err := database.ConnectDB(); err != nil {
+		log.Fatal(err)
+	}
 
 	if err := database.ConnectSqlDB(); err != nil {
 		log.Fatal(err)
