@@ -1,6 +1,8 @@
 package services
 
 import (
+	"time"
+
 	database "github.com/akgupta-47/auth-module/db"
 	"github.com/akgupta-47/auth-module/helpers"
 	models "github.com/akgupta-47/auth-module/models"
@@ -35,8 +37,14 @@ func FetchUserProfiles(c *fiber.Ctx, userID primitive.ObjectID) ([]*models.Profi
 }
 
 func CreateNewProfile(c *fiber.Ctx, tempProfile *models.Profile) (error) {
-
 	tempProfile.IsComplete = helpers.IsProfileComplete(tempProfile)
+	
+	var expiresAt *time.Time
+	if !tempProfile.IsComplete {
+		expiry := time.Now().Add(2 * time.Hour)
+		expiresAt = &expiry
+		tempProfile.ExpiresAt = expiresAt
+	}
 
 	_, err := profileCollection.InsertOne(c.Context(), tempProfile)
 	if err != nil {

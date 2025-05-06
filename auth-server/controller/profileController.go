@@ -14,20 +14,22 @@ import (
 func ComputeProfile(c *fiber.Ctx, userID primitive.ObjectID, lat, lon float64) error {
     const matchRadius = 150.0 // meters
 
+	profileBody := new(models.Profile)
+
+	if err := c.BodyParser(profileBody); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(models.ErrorJson{Error: err.Error()})
+	}
+
 	if (userID != primitive.NilObjectID) {
 		// 1. Fetch all user addresses
 		addresses, err := services.FetchUserProfiles(c, userID)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(models.ErrorJson{Error: err.Error()})
 		}
-	
-		// 2. Check if any address is within radius
-		for _, addr := range addresses {
-			distance := helpers.HaversineDistance(lat, lon, addr.Latitude, addr.Longitude)
-			if distance <= matchRadius {
-				return c.Status(fiber.StatusOK).JSON(addr)
-			}
-		}
+
+		if bestAddress := helpers.GetBestAddress(addresses, lat, lon, matchRadius); bestAddress != nil {
+			return c.Status(fiber.StatusOK).JSON(bestAddress)
+		}		
 	}
 
     // 3. No match found — check if there's a temp profile for this session
@@ -39,9 +41,9 @@ func ComputeProfile(c *fiber.Ctx, userID primitive.ObjectID, lat, lon float64) e
     // 4. Create a temporary profile
     newAddr := models.Profile{
         ID:        primitive.NewObjectID(),
-        UserID:    userID,
-        Latitude:  lat,
-        Longitude: lon,
+        UserID:    profileBody.UserID,
+        Latitude:  profileBody.Latitude,
+        Longitude: profileBody.Longitude,
         Label:     "current_location",
         IsActive:  true,
 		LoggedIn: false,
