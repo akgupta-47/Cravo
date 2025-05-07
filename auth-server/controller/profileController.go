@@ -11,7 +11,7 @@ import (
 )
 
 
-func ComputeProfile(c *fiber.Ctx, userID primitive.ObjectID, lat, lon float64) error {
+func ComputeProfile(c *fiber.Ctx) error {
     const matchRadius = 150.0 // meters
 
 	profileBody := new(models.Profile)
@@ -20,14 +20,14 @@ func ComputeProfile(c *fiber.Ctx, userID primitive.ObjectID, lat, lon float64) e
 		return c.Status(fiber.StatusBadRequest).JSON(models.ErrorJson{Error: err.Error()})
 	}
 
-	if (userID != primitive.NilObjectID) {
+	if (*profileBody.UserID != primitive.NilObjectID) {
 		// 1. Fetch all user addresses
-		addresses, err := services.FetchUserProfiles(c, userID)
+		addresses, err := services.FetchUserProfiles(c, *profileBody.UserID)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(models.ErrorJson{Error: err.Error()})
 		}
 
-		if bestAddress := helpers.GetBestAddress(addresses, lat, lon, matchRadius); bestAddress != nil {
+		if bestAddress := helpers.GetBestAddress(addresses, profileBody.Latitude, profileBody.Longitude, matchRadius); bestAddress != nil {
 			return c.Status(fiber.StatusOK).JSON(bestAddress)
 		}		
 	}
@@ -58,7 +58,13 @@ func ComputeProfile(c *fiber.Ctx, userID primitive.ObjectID, lat, lon float64) e
     return c.Status(fiber.StatusOK).JSON(newAddr)
 }
 
-func GetAllUserProfiles(c *fiber.Ctx, userID primitive.ObjectID) (error) {
+func GetAllUserProfiles(c *fiber.Ctx) error {
+
+	userIDStr := c.Params("user_id")
+	userID, err := primitive.ObjectIDFromHex(userIDStr)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(models.ErrorJson{Error: err.Error()})
+	}
 
 	profiles, err := services.FetchUserProfiles(c, userID)
 	if err != nil {
@@ -66,4 +72,19 @@ func GetAllUserProfiles(c *fiber.Ctx, userID primitive.ObjectID) (error) {
     }
 
 	return c.Status(fiber.StatusOK).JSON(profiles)
+}
+
+func CreateNewProfile(c *fiber.Ctx) error {
+
+	newProfileBody := new(models.Profile)
+
+	if err := c.BodyParser(newProfileBody); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(models.ErrorJson{Error: err.Error()})
+	}
+
+	if err := services.CreateNewProfile(c, newProfileBody); err != nil {
+        return c.Status(fiber.StatusInternalServerError).JSON(models.ErrorJson{Error: err.Error()})
+    }
+
+    return c.Status(fiber.StatusOK).JSON(newProfileBody)
 }
