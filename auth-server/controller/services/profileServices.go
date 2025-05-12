@@ -12,14 +12,13 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-
-var profileCollection = database.GetProfileCollection()
+// var profileCollection = database.CravoDB.Collection("profile")
 
 func FetchUserProfiles(c *fiber.Ctx, userID primitive.ObjectID) ([]*models.Profile, error) {
 	var profiles []*models.Profile
 	query := bson.M{"user_id": userID}
 
-	cursor, err := profileCollection.Find(c.Context(), query)
+	cursor, err := database.CravoDB.Collection("profile").Find(c.Context(), query)
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +35,7 @@ func FetchUserProfiles(c *fiber.Ctx, userID primitive.ObjectID) ([]*models.Profi
 	return profiles, nil
 }
 
-func CreateNewProfile(c *fiber.Ctx, tempProfile *models.Profile) (error) {
+func CreateNewProfile(c *fiber.Ctx, tempProfile *models.Profile) (primitive.ObjectID, error) {
 	tempProfile.IsComplete = helpers.IsProfileComplete(tempProfile)
 	
 	var expiresAt *time.Time
@@ -46,10 +45,19 @@ func CreateNewProfile(c *fiber.Ctx, tempProfile *models.Profile) (error) {
 		tempProfile.ExpiresAt = expiresAt
 	}
 
-	_, err := profileCollection.InsertOne(c.Context(), tempProfile)
-	if err != nil {
-		return err
+	if (database.CravoDB.Collection("profile") == nil) {
+		return primitive.NilObjectID, c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"error": "profile collection not found",
+		})
 	}
 
-    return nil
+	result, err := database.CravoDB.Collection("profile").InsertOne(c.Context(), tempProfile)
+	if err != nil {
+		return primitive.NilObjectID, 
+		c.Status(fiber.StatusInternalServerError).JSON(models.ErrorJson{Error: err.Error()})
+	}
+
+	insertedId := result.InsertedID.(primitive.ObjectID)
+
+    return insertedId, nil
 }

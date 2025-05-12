@@ -51,9 +51,12 @@ func ComputeProfile(c *fiber.Ctx) error {
         CreatedAt: time.Now(),
         UpdatedAt: time.Now(),
     }
-    if err := services.CreateNewProfile(c, &newAddr); err != nil {
+
+    if insertedId, err := services.CreateNewProfile(c, &newAddr); err != nil {
         return c.Status(fiber.StatusInternalServerError).JSON(models.ErrorJson{Error: err.Error()})
-    }
+    }else {
+		newAddr.ID = insertedId
+	}
 
     return c.Status(fiber.StatusOK).JSON(newAddr)
 }
@@ -79,12 +82,14 @@ func CreateNewProfile(c *fiber.Ctx) error {
 	newProfileBody := new(models.Profile)
 
 	if err := c.BodyParser(newProfileBody); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(models.ErrorJson{Error: err.Error()})
+		return err
 	}
 
-	if err := services.CreateNewProfile(c, newProfileBody); err != nil {
-        return c.Status(fiber.StatusInternalServerError).JSON(models.ErrorJson{Error: err.Error()})
-    }
+	if insertedId, err := services.CreateNewProfile(c, newProfileBody); err != nil {
+        return err
+    }else {
+		newProfileBody.ID = insertedId
+	}
 
     return c.Status(fiber.StatusOK).JSON(newProfileBody)
 }

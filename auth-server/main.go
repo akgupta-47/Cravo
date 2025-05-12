@@ -18,9 +18,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if err := database.ConnectSqlDB(); err != nil {
-		log.Fatal(err)
-	}
+	// if err := database.ConnectSqlDB(); err != nil {
+	// 	log.Fatal(err)
+	// }
 
 	// var userCollection = db.GetUserCollection()
 	// fmt.Println(*userCollection)
@@ -37,9 +37,9 @@ func main() {
 		return c.SendString("I'm a GET request!")
 	})
 
+	routes.ProfileRoutes(app)
 	routes.AuthRoutes(app)
 	routes.UserRoutes(app)
-	// routes.OrderRoutes(app)
 
 	api := app.Group("/api/v1")
 	api.Get("/all", producer.CreateComment)
