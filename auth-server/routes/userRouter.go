@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"github.com/akgupta-47/auth-gofib/controller"
-	"github.com/akgupta-47/auth-gofib/middleware"
+	"github.com/akgupta-47/auth-module/controller"
+	"github.com/akgupta-47/auth-module/middleware"
 	"github.com/gofiber/fiber/v2"
 )
 

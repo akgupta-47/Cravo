@@ -1,9 +1,8 @@
-module github.com/akgupta-47/go-server
+module github.com/akgupta-47/auth-module
 
 go 1.22.5
 
 require (
-	github.com/akgupta-47/auth-gofib v0.0.0-20240618194154-b522871648ce
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-playground/validator/v10 v10.22.0
 	github.com/gofiber/fiber/v2 v2.52.5

@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"github.com/akgupta-47/auth-gofib/helpers"
+	"github.com/akgupta-47/auth-module/helpers"
 	"github.com/gofiber/fiber/v2"
 )
 

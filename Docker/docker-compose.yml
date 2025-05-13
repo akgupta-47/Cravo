@@ -166,6 +166,24 @@ services:
     environment:
       MONGODB_URL: ${MONGO_URL}
 
+  auth-service:
+    image: cravo-auth
+    build:
+      context: ../auth-server
+      dockerfile: ../auth-server/Dockerfile
+    container_name: cravo-auth
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    ports:
+      - "8080:5000"
+    networks:
+      - app
+    environment:
+      MONGODB_URL: ${MONGO_URL}
+    profiles:
+      - golang
+
 networks:
   elastic:
     driver: bridge

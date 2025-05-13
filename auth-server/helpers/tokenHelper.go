@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/akgupta-47/auth-gofib/db"
+	database "github.com/akgupta-47/auth-module/db"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
@@ -94,7 +94,7 @@ func ValidateToken(signedToken string) (claims *SignedDetails, msg string) {
 }
 
 func UpdateAllTokens(c *fiber.Ctx, signedToken string, refreshToken string, userId string) {
-	var userCollection = db.GetUserCollection()
+	var userCollection = database.GetUserCollection()
 	var updatedObject primitive.D
 
 	updatedObject = append(updatedObject, bson.E{Key: "token", Value: signedToken})
