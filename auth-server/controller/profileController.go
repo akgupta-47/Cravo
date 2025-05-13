@@ -93,3 +93,23 @@ func CreateNewProfile(c *fiber.Ctx) error {
 
     return c.Status(fiber.StatusOK).JSON(newProfileBody)
 }
+
+func UpdateProfile(c *fiber.Ctx) error {
+	
+	idParam := c.Params("profile_id")
+	profileID, err := primitive.ObjectIDFromHex(idParam)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid ID"})
+	}
+
+	var updateData models.Profile
+	if err := c.BodyParser(&updateData); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Cannot parse JSON"})
+	}
+
+	if err := services.UpdateUserProfile(c, &updateData, profileID); err != nil {
+		return err
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Profile updated"})
+}

@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"time"
 
 	database "github.com/akgupta-47/auth-module/db"
@@ -51,6 +52,8 @@ func CreateNewProfile(c *fiber.Ctx, tempProfile *models.Profile) (primitive.Obje
 		})
 	}
 
+	// fmt.Printf("%+v\n", yourStruct) // Shows field names and values
+
 	result, err := database.CravoDB.Collection("profile").InsertOne(c.Context(), tempProfile)
 	if err != nil {
 		return primitive.NilObjectID, 
@@ -60,4 +63,33 @@ func CreateNewProfile(c *fiber.Ctx, tempProfile *models.Profile) (primitive.Obje
 	insertedId := result.InsertedID.(primitive.ObjectID)
 
     return insertedId, nil
+}
+
+func UpdateUserProfile(c *fiber.Ctx, updateData *models.Profile, profileID primitive.ObjectID) (error) {
+	
+	updateDoc := helpers.BuildUpdateDocument(&updateData)
+	if len(updateDoc["$set"].(bson.M)) == 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "No fields to update"})
+	}
+
+	if (database.CravoDB.Collection("profile") == nil) {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"error": "profile collection not found",
+		})
+	}
+
+	// Always update `updated_at`
+	updateDoc["$set"].(bson.M)["updated_at"] = time.Now()
+
+	filter := bson.M{"_id": profileID}
+	result, err := database.CravoDB.Collection("profile").UpdateOne(context.TODO(), filter, updateDoc)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Update failed"})
+	}
+
+	if result.MatchedCount == 0 {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "Profile not found"})
+	}
+
+	return nil
 }

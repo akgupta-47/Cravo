@@ -22,8 +22,8 @@ type Profile struct {
     Latitude       float64            `bson:"latitude" json:"latitude"`
     Longitude      float64            `bson:"longitude" json:"longitude"`
     IsDefault      *bool               `bson:"is_default,omitempty" json:"is_default,omitempty"`
-	IsComplete     bool               `bson:"is_complete,omitempty" json:"is_complete,omitempty"`
-	LoggedIn       bool               `bson:"logged_id" json:"logged_id"`
+	IsComplete     bool               `bson:"is_complete" json:"is_complete"`
+	LoggedIn       bool               `bson:"logged_in" json:"logged_in"`
     IsActive       bool               `bson:"is_active" json:"is_active"`
     PhoneNumber    *string             `bson:"phone_number,omitempty" json:"phone_number,omitempty"`
 	ExpiresAt      *time.Time         `bson:"expiresAt,omitempty"`
