@@ -97,8 +97,8 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5432
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
@@ -113,7 +113,7 @@ services:
     image: redis:7
     container_name: redis01
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT}:${REDIS_PORT}"
     volumes:
       - redisdata:/data
     command: [
@@ -123,6 +123,8 @@ services:
       "--maxmemory", "100mb", 
       "--maxmemory-policy", "allkeys-lru"
     ]
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
     networks:
       - app
     healthcheck:
@@ -145,7 +147,7 @@ services:
     networks:
       - app
     healthcheck:
-      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ ping: 1 })"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -157,14 +159,29 @@ services:
       dockerfile: ../golang/Dockerfile
     container_name: cravo-go
     depends_on:
+      postgres:
+          condition: service_healthy
       mongodb:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     ports:
       - "8080:4000"
     networks:
       - app
     environment:
+      PORT: 4000
       MONGODB_URL: ${MONGO_URL}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_HOST: ${REDIS_HOST}
+      SECRET_KEY: ${SECRET_KEY}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_DB: ${POSTGRES_DB}
+      SSL_MODE: ${POSTGRES_SSL_MODE}
 
   auth-service:
     image: cravo-auth
@@ -183,7 +200,7 @@ services:
       MONGODB_URL: ${MONGO_URL}
     profiles:
       - golang
-
+      
 networks:
   elastic:
     driver: bridge
