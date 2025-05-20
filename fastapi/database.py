@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from elasticsearch import Elasticsearch
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
+import redis
 
 # Load environment variables
 load_dotenv()
@@ -72,3 +73,28 @@ async def close_db():
 
 
 ES = Elasticsearch(os.getenv("ELASTIC_SEARCH_SERVER"))
+
+
+# Redis connection function
+def get_redis_client():
+    """Initialize and return a Redis client."""
+    redis_host = os.getenv("REDIS_HOST", "localhost")
+    redis_port = os.getenv("REDIS_PORT", 6379)
+    redis_db = os.getenv("REDIS_DB", 0)
+
+    try:
+        redis_client = redis.StrictRedis(
+            host=redis_host,
+            port=int(redis_port),
+            db=int(redis_db),
+            decode_responses=True,  # Ensures string responses
+        )
+        # Test connection
+        redis_client.ping()
+        return redis_client
+    except redis.ConnectionError as e:
+        raise ValueError(f"🚨 Failed to connect to Redis: {str(e)}")
+
+
+# Initialize Redis client
+redis_client = get_redis_client()

@@ -6,9 +6,7 @@ from logger import logger
 from models.Feedback import Feedback as FeedbackModel
 from models.ProductFeedback import ProductFeedback as ProductFeedbackModel
 from services import FeedbackService as feedbackService
-from sqlalchemy import delete
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import Session
 from utils.AppError import AppError
 from utils.ExceptionWrapper import handle_request
 
