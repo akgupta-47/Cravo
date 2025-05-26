@@ -80,17 +80,18 @@ def get_redis_client():
     """Initialize and return a Redis client."""
     redis_host = os.getenv("REDIS_HOST", "localhost")
     redis_port = os.getenv("REDIS_PORT", 6379)
-    redis_db = os.getenv("REDIS_DB", 0)
+    redis_password = os.getenv("REDIS_PASSWORD", None)
 
     try:
         redis_client = redis.StrictRedis(
             host=redis_host,
             port=int(redis_port),
-            db=int(redis_db),
+            password=redis_password,  # Add password for authentication
             decode_responses=True,  # Ensures string responses
         )
         # Test connection
         redis_client.ping()
+        print("✅ Connected to Redis successfully")
         return redis_client
     except redis.ConnectionError as e:
         raise ValueError(f"🚨 Failed to connect to Redis: {str(e)}")
