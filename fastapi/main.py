@@ -6,6 +6,7 @@ from controllers.FeedbackRouter import feedback_router
 from controllers.OrdersRouter import order_router
 from controllers.ProductRouter import product_router
 from controllers.TestRouter import test_router
+from controllers.CartRouter import cart_router
 from database import close_db, init_db
 from dotenv import load_dotenv
 from utils.AppError import AppError
@@ -33,6 +34,7 @@ app.include_router(order_router)
 app.include_router(test_router)
 app.include_router(feedback_router)
 app.include_router(product_router)
+app.include_router(cart_router)
 
 
 @app.exception_handler(AppError)
