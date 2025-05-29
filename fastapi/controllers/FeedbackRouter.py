@@ -10,13 +10,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from utils.AppError import AppError
 from utils.ExceptionWrapper import handle_request
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 
 feedback_router = APIRouter(prefix="/feedback", tags=["Feedback"])
 
 
 def prepareFeedbackSchema(
-    feedback: FeedbackModel, pf: list[ProductFeedbackModel]
+    request: Request, feedback: FeedbackModel, pf: list[ProductFeedbackModel]
 ) -> FeedbackSchema:
     feedback_dict = (
         feedback.model_dump() if hasattr(feedback, "model_dump") else feedback.__dict__
@@ -37,7 +37,7 @@ def prepareFeedbackSchema(
 @feedback_router.post("/new")
 @handle_request
 async def new_order_feedback(
-    feedback: FeedbackSchema, db: AsyncSession = Depends(get_db)
+    request: Request, feedback: FeedbackSchema, db: AsyncSession = Depends(get_db)
 ) -> FeedbackSchema:
     logger.info("Received new feedback request for order_id: %s", feedback.order_id)
 
@@ -98,7 +98,7 @@ async def new_order_feedback(
 @feedback_router.get("/{id}")
 @handle_request
 async def get_feedback_for_order(
-    id: str, db: AsyncSession = Depends(get_db)
+    request: Request, id: str, db: AsyncSession = Depends(get_db)
 ) -> FeedbackSchema:
 
     feedback = await feedbackService.get_feedback_by_id(db, id)
@@ -127,7 +127,7 @@ async def get_feedback_for_order(
 # instead of using single ones lets just give the list only
 @feedback_router.get("/order/{id}")
 async def get_feedback_for_order(
-    id: str, db: AsyncSession = Depends(get_db)
+    request: Request, id: str, db: AsyncSession = Depends(get_db)
 ) -> FeedbackSchema:
 
     feedback = await feedbackService.get_shop_feedback_by_id(db, id)
@@ -149,6 +149,7 @@ async def get_feedback_for_order(
 @feedback_router.put("/{feedback_id}")
 @handle_request
 async def update_feedback_route(
+    request: Request,
     feedback_id: str,
     feedback_data: FeedbackUpdateSchema,
     db: AsyncSession = Depends(get_db),
