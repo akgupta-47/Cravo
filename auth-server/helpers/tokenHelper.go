@@ -1,7 +1,6 @@
 package helpers
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"time"
@@ -78,18 +77,15 @@ func ValidateToken(signedToken string) (claims *SignedDetails, msg string) {
 
 	claims, ok := token.Claims.(*SignedDetails)
 	if !ok {
-		msg = fmt.Sprintf("token is invalid")
-		msg = err.Error()
+		msg = "token is invalid"
 		return
 	}
 
 	if claims.ExpiresAt < time.Now().Local().Unix() {
-		msg = fmt.Sprintf("token is expiredd")
-		msg = err.Error()
+		msg = "token is expired"
 		return
 	}
 
-	fmt.Println("i reached here", claims, msg)
 	return claims, msg
 }
 
@@ -113,5 +109,4 @@ func UpdateAllTokens(c *fiber.Ctx, signedToken string, refreshToken string, user
 	if err != nil {
 		log.Panic(err)
 	}
-	return
 }
