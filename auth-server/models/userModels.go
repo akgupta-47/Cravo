@@ -16,6 +16,7 @@ type User struct {
 	Password      *string            `json:"Password" validate:"required,min=6"`
 	Email         *string            `json:"email" validate:"email,required"`
 	Phone         *string            `json:"phone" validate:"required"`
+	GoogleID   	  *string            `json:"google_id,omitempty"`
 	Token         *string            `json:"token"`
 	User_type     *string            `json:"user_type" validate:"required,eq=ADMIN|eq=USER|eq=RIDER|eq=VENDOR"`
 	Refresh_token *string            `json:"refresh_token"`

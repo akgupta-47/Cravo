@@ -8,4 +8,6 @@ import (
 func AuthRoutes(app *fiber.App) {
 	app.Post("users/signup", controller.Signup)
 	app.Post("users/login", controller.Login)
+	app.Get("/auth/google/login", controller.HandleGoogleLogin)
+	app.Get("/auth/google/callback", controller.HandleGoogleCallback)
 }
