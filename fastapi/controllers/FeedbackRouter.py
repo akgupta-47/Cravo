@@ -125,25 +125,25 @@ async def get_feedback_for_order(
 
 
 # instead of using single ones lets just give the list only
-@feedback_router.get("/order/{id}")
-async def get_feedback_for_order(
-    request: Request, id: str, db: AsyncSession = Depends(get_db)
-) -> FeedbackSchema:
+# @feedback_router.get("/order/{id}")
+# async def get_feedback_for_order(
+#     request: Request, id: str, db: AsyncSession = Depends(get_db)
+# ) -> FeedbackSchema:
 
-    feedback = await feedbackService.get_shop_feedback_by_id(db, id)
+#     feedback = await feedbackService.get_shop_feedback_by_id(db, id)
 
-    if not feedback:
-        logger.info("No feedback was found")
-        raise HTTPException(status_code=404, detail="feedback with {id} not found")
+#     if not feedback:
+#         logger.info("No feedback was found")
+#         raise HTTPException(status_code=404, detail="feedback with {id} not found")
 
-    fdbk = FeedbackSchema(
-        id=feedback.id,
-        rating_shop=feedback.rating_shop,
-        feedback_shop=feedback.feedack_shop,
-        shop_id=feedback.shop_id,
-    )
+#     fdbk = FeedbackSchema(
+#         id=feedback.id,
+#         rating_shop=feedback.rating_shop,
+#         feedback_shop=feedback.feedack_shop,
+#         shop_id=feedback.shop_id,
+#     )
 
-    return fdbk
+#     return fdbk
 
 
 @feedback_router.put("/{feedback_id}")
