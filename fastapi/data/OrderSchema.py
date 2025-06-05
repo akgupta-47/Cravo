@@ -1,6 +1,6 @@
-from typing import Dict, Union
+from typing import Union
 from typing import List
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from uuid import UUID
 
 # do we need offered price ??

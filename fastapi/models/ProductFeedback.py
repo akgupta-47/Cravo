@@ -1,5 +1,5 @@
 from database import Base
-from sqlalchemy import Column, Integer, PrimaryKeyConstraint, String, TIMESTAMP, Boolean, text, ForeignKey, Double, Enum
+from sqlalchemy import Column, Integer, PrimaryKeyConstraint, String
 
 class ProductFeedback(Base):
     __tablename__ = "product_feedback"

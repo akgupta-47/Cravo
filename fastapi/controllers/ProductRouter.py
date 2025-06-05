@@ -1,5 +1,3 @@
-import json
-import os
 
 import shortuuid
 from data import ProductSchema

@@ -1,7 +1,6 @@
 import os
 from pydantic import BaseModel
 from fastapi import Request, HTTPException
-from fastapi.security.utils import get_authorization_scheme_param
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.status import HTTP_401_UNAUTHORIZED
 import jwt

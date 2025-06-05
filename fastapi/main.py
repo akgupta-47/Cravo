@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 from middleware.authMiddleware import AuthenticateMiddleware
 from utils.AppError import AppError
 
-from fastapi import FastAPI, HTTPException, Request, logger
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 
 load_dotenv()

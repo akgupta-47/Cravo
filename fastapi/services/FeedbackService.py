@@ -1,9 +1,9 @@
-from typing import List, Optional
+from typing import Optional
 
 from data.FeedbackUpdateSchema import FeedbackUpdateSchema
 from models.Feedback import Feedback as FeedbackModel
 from models.ProductFeedback import ProductFeedback as ProductFeedbackModel
-from sqlalchemy import delete, insert, select, update
+from sqlalchemy import insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from utils.AppError import AppError
 from utils.DbExceptionHandler import handle_db_exceptions

@@ -1,6 +1,6 @@
 from typing import List, Optional, Union
 
-from pydantic import UUID4, BaseModel, Field, model_validator
+from pydantic import UUID4, BaseModel
 
 
 class Product(BaseModel):

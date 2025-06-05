@@ -1,5 +1,4 @@
 from typing import Union
-from typing import List
 from pydantic import BaseModel
 
 class Item(BaseModel):

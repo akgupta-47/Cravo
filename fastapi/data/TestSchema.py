@@ -1,6 +1,5 @@
-from typing import Dict, Optional, Union
-from typing import List
-from pydantic import BaseModel, Field
+from typing import Optional, Union
+from pydantic import BaseModel
 from uuid import UUID
 
 class Test(BaseModel):

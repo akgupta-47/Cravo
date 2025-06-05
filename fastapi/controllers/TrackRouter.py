@@ -1,15 +1,11 @@
-from datetime import date
-from uuid import uuid4
 import shortuuid
 from fastapi import APIRouter
 from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi import HTTPException, Depends
+from fastapi import Depends
 from database import get_db
 from models.Order import Order as OrderModel
 from models.Track import Track as TrackModel
-from models.Feedback import Feedback as FeedbackModel
 from utils import TrackUtils
-from logger import logger
 
 order_router = APIRouter(
     prefix='/track',

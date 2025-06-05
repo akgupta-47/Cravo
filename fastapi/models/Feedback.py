@@ -1,5 +1,5 @@
 from database import Base
-from sqlalchemy import Column, Integer, String, TIMESTAMP, Boolean, text, ForeignKey, Double, Enum
+from sqlalchemy import Column, Integer, String
 
 class Feedback(Base):
     __tablename__ = "feedback"

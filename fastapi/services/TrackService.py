@@ -1,7 +1,5 @@
-from typing import List, Optional
-import shortuuid
-from sqlalchemy import delete, insert, select
-from sqlalchemy.orm import Session
+from typing import Optional
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from models.Track import Track as TrackModel
 

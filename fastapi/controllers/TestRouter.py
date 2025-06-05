@@ -1,11 +1,9 @@
 import shortuuid
 from fastapi import APIRouter
-from sqlalchemy.orm import Session
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException, Depends
 from database import get_db
 from models.Test import Test as TestModel
-from logger import logger
 from data.TestSchema import Test as TestSchema
 
 test_router = APIRouter(

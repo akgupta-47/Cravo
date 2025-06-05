@@ -1,7 +1,5 @@
 from datetime import datetime
-from fastapi import APIRouter, HTTPException, Request
-from pydantic import BaseModel
-import redis
+from fastapi import APIRouter, Request
 from utils.ExceptionWrapper import handle_request
 from utils.AppError import AppError
 

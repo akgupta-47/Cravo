@@ -1,5 +1,5 @@
 from database import Base
-from sqlalchemy import Column, String, TIMESTAMP, Boolean, text, ForeignKey, Numeric, Enum
+from sqlalchemy import Column, String, TIMESTAMP, text, Numeric, Enum
 import enum 
 
 # Enums

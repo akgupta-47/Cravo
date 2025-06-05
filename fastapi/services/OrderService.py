@@ -1,9 +1,6 @@
 from typing import List, Optional
-import shortuuid
 from sqlalchemy import delete, insert, select
-from sqlalchemy.orm import Session
 from sqlalchemy.ext.asyncio import AsyncSession
-from data import OrderSchema
 from models.OrderProductMapper import OrderProductMapper as OrderProductMapperModel
 from models.Order import Order as OrderModel
 
