@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 from utils.AppError import AppError
 from utils.ExceptionWrapper import handle_request
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Request
 
 """ <-
 @Controller = Product Controller
@@ -50,7 +50,9 @@ product_router = APIRouter(prefix="/products", tags=["Products"])
 @product_router.post("/new")
 @handle_request
 async def new_product(
-    product_data: ProductSchema.ProductBase, db: AsyncSession = Depends(get_db)
+    request: Request,
+    product_data: ProductSchema.ProductBase,
+    db: AsyncSession = Depends(get_db),
 ) -> ProductSchema.ProductBase:
     logger.info("Received new product creation request")
 
@@ -95,7 +97,7 @@ async def new_product(
 @product_router.post("/one/{id}")
 @handle_request
 async def new_product(
-    id: str, db: AsyncSession = Depends(get_db)
+    request: Request, id: str, db: AsyncSession = Depends(get_db)
 ) -> ProductSchema.ProductBase:
 
     product = await productService.get_product_by_id(db, id)
@@ -114,7 +116,7 @@ async def new_product(
 @product_router.post("/subcategory/{subcategory}")
 @handle_request
 async def new_product(
-    subcategory: str, db: AsyncSession = Depends(get_db)
+    request: Request, subcategory: str, db: AsyncSession = Depends(get_db)
 ) -> ProductSchema.ProductESearch:
 
     product = await productService.get_product_by_subcategory(db, subcategory)
@@ -133,7 +135,7 @@ async def new_product(
 @product_router.get("/search")
 @handle_request
 async def search_products(
-    q: str = Query(..., min_length=1, max_length=50)
+    request: Request, q: str = Query(..., min_length=1, max_length=50)
 ) -> list[ProductSchema.ProductESearch]:
     query = {
         "query": {
@@ -150,6 +152,7 @@ async def search_products(
 @product_router.put("/update/{id}")
 @handle_request
 def update_product(
+    request: Request,
     id: str,
     update_product_fields: ProductSchema.ProductUpdate,
     db: AsyncSession = Depends(get_db),
@@ -182,7 +185,7 @@ def update_product(
 
 @handle_request
 @product_router.get("/all")
-async def getAllProducts(db: Session = Depends(get_db)):
+async def getAllProducts(request: Request, db: Session = Depends(get_db)):
     return await db.query(ProductModel)
 
 
@@ -196,7 +199,9 @@ product_router.get("/all/category/{category}")
 
 
 @handle_request
-async def getAllProductsCategory(category: str, db: Session = Depends(get_db)):
+async def getAllProductsCategory(
+    request: Request, category: str, db: Session = Depends(get_db)
+):
     return await db.query(ProductModel).filter(ProductModel.category == category)
 
 
@@ -212,7 +217,7 @@ product_router.get("/all/category/{category}/{subcategory}")
 
 @handle_request
 async def getAllProductsSubCategory(
-    category: str, subcategory: str, db: Session = Depends(get_db)
+    request: Request, category: str, subcategory: str, db: Session = Depends(get_db)
 ):
     return await db.query(ProductModel).filter(
         ProductModel.category == category, ProductModel.sub_type == subcategory
