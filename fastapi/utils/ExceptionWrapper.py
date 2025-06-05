@@ -1,5 +1,6 @@
 from functools import wraps
 
+from elasticsearch import exceptions
 from logger import logger
 from utils.AppError import AppError
 
@@ -29,6 +30,24 @@ def handle_request(func):
                 status_code=500,
                 component=component_name,  # Dynamically set component name
                 message="Unexpected error occurred",
+                exception=e,
+            )
+
+        except exceptions.ConnectionError as ce:
+            logger.error(f"Unexpected error in {component_name}: {str(ce)}")
+            raise AppError(
+                status_code=500,
+                component=component_name,  # Dynamically set component name
+                message="Unexpected error occurred from elastic search",
+                exception=ce,
+            )
+
+        except exceptions.TransportError as e:
+            logger.error(f"Unexpected error in {component_name}: {str(e)}")
+            raise AppError(
+                status_code=500,
+                component=component_name,  # Dynamically set component name
+                message="Unexpected error occurred from elastic search",
                 exception=e,
             )
 
