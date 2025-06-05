@@ -201,7 +201,7 @@ services:
       MONGODB_URL: ${MONGO_URL}
     profiles:
       - golang
-      
+
 networks:
   elastic:
     driver: bridge

@@ -20,12 +20,24 @@ import (
 // var userCollection = db.Mgi.Db.Collection("user")
 var validate = validator.New()
 
+// @Router = /test
+// @HttpMethod = GET
+// @Description = Test route to print user type from headers.
+// @param = None
+// @Return = JSON response with status OK.
+// @ErrorCodes = None
 func TestRoute(c *fiber.Ctx) error {
 	utype := c.Get("user_type")
 	fmt.Println(utype)
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{})
 }
 
+// @Router = None
+// @HttpMethod = None
+// @Description = Hashes a password using bcrypt.
+// @param = [password, string, the password to hash]
+// @Return = [hashed_password, string, the hashed password]
+// @ErrorCodes = None
 func HashPassword(password string) string {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 	if err != nil {
@@ -34,18 +46,32 @@ func HashPassword(password string) string {
 	return string(bytes)
 }
 
+// @Router = None
+// @HttpMethod = None
+// @Description = Verifies a password against a hashed password.
+// @param = [userPassword, string, the hashed password], [providedPassword, string, the plain text password]
+// @Return = [isValid, bool, whether the password is valid], [message, string, error message if invalid]
+// @ErrorCodes = None
 func VerifyPassword(userPassword string, providedPassword string) (bool, string) {
 	err := bcrypt.CompareHashAndPassword([]byte(providedPassword), []byte(userPassword))
 	check := true
 	msg := ""
 
 	if err != nil {
-		msg = fmt.Sprintf("email or password incorrect!!")
+		msg = "email or password incorrect!!"
 		check = false
 	}
 	return check, msg
 }
 
+// @Router = /signup
+// @HttpMethod = POST
+// @Description = Creates a new user in the database.
+// @param = [user_object, model, fields required to create a new user]
+// @Return = JSON response with the inserted user ID.
+// @ErrorCodes = 
+// - 400: Bad Request if validation fails or body parsing fails.
+// - 500: Internal Server Error if database insertion fails or email already exists.
 func Signup(c *fiber.Ctx) error {
 	var userCollection = database.GetUserCollection()
 	user := new(models.User)
@@ -89,6 +115,14 @@ func Signup(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(resultInsertionNumber)
 }
 
+// @Router = /login
+// @HttpMethod = POST
+// @Description = Authenticates a user and generates tokens.
+// @param = [user_object, model, email and password required for login]
+// @Return = JSON response with user details and tokens.
+// @ErrorCodes = 
+// - 400: Bad Request if body parsing fails.
+// - 500: Internal Server Error if email or password is incorrect or user not found.
 func Login(c *fiber.Ctx) error {
 	var userCollection = database.GetUserCollection()
 	user := new(models.User)
@@ -131,6 +165,16 @@ func Login(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(foundUser)
 }
 
+// @Router = /users
+// @HttpMethod = GET
+// @Description = Retrieves a paginated list of users.
+// @param = 
+// - [recordPerPage, query, optional, number of records per page (default: 10)]
+// - [page, query, optional, page number (default: 1)]
+// @Return = JSON response with paginated user data and total count.
+// @ErrorCodes = 
+// - 400: Bad Request if user type is not ADMIN.
+// - 500: Internal Server Error if database query fails.
 func GetUsers(c *fiber.Ctx) error {
 	var userCollection = database.GetUserCollection()
 	if err := helpers.CheckUserType(c, "ADMIN"); err != nil {
@@ -187,6 +231,14 @@ func GetUsers(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(allusers[0])
 }
 
+// @Router = /users/{user_id}
+// @HttpMethod = GET
+// @Description = Retrieves a user by their user ID.
+// @param = [user_id, path, required, the ID of the user to retrieve]
+// @Return = JSON response with user data.
+// @ErrorCodes = 
+// - 400: Bad Request if user type does not match the user ID.
+// - 500: Internal Server Error if database query fails.
 func GetUser(c *fiber.Ctx) error {
 	var userCollection = database.GetUserCollection()
 	userId := c.Params("user_id")
