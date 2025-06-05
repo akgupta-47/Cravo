@@ -1,4 +1,3 @@
-
 import shortuuid
 from data import ProductSchema
 from database import ES, get_db
@@ -94,7 +93,7 @@ async def new_product(
 
 @product_router.post("/one/{id}")
 @handle_request
-async def new_product(
+async def get_product(
     request: Request, id: str, db: AsyncSession = Depends(get_db)
 ) -> ProductSchema.ProductBase:
 
@@ -113,7 +112,7 @@ async def new_product(
 
 @product_router.post("/subcategory/{subcategory}")
 @handle_request
-async def new_product(
+async def get_product_by_category(
     request: Request, subcategory: str, db: AsyncSession = Depends(get_db)
 ) -> ProductSchema.ProductESearch:
 

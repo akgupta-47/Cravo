@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from utils.AppError import AppError
 from utils.ExceptionWrapper import handle_request
 
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, Request
 
 feedback_router = APIRouter(prefix="/feedback", tags=["Feedback"])
 
