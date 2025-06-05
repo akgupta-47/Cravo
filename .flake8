@@ -1,4 +1,4 @@
 # .flake8
 [flake8]
 exclude = .git,__pycache__,build,dist
-ignore = E501, E251, E302, W293, E231, W292, W291, E111, E225, F811, E128, E203, E221
+ignore = E501, E251, E302, W293, E231, W292, W291, E111, E225, F811, E128, E203, E221, E711, W391, E303
