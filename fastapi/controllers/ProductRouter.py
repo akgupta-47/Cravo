@@ -56,7 +56,7 @@ async def new_product(
     # create the feedback id on the object
     product_data.id = shortuuid.uuid()
 
-    if product_data.id == None:
+    if product_data.id is None:
         raise AppError(
             status_code=500,
             component="Product Service",
