@@ -207,8 +207,6 @@ async def update_order_rating(
 @Description = update the time when order got delivered
 @param = [order_object,model,fields that are required to update the delivered timing of new order]
 -> """
-
-
 @order_router.patch("/update/arrival_time")
 async def update_order_arrival_time(order: OrderSchema, db: Session = Depends(get_db)):
     order_item = await orderService.get_order_by_id(db, order.id)
@@ -229,8 +227,6 @@ async def update_order_arrival_time(order: OrderSchema, db: Session = Depends(ge
 @Description = update the items that are unavailable, handle the case id partial amount of items are unavailable, start refund process
 @param = [order_object,model,fields that are required to track items that are unavailable after placing a new order]
 -> """
-
-
 # complete this
 @order_router.patch("/update/unavailable/item")
 async def update_unavailable_item(order: OrderSchema, db: Session = Depends(get_db)):

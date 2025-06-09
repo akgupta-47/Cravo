@@ -193,8 +193,6 @@ async def getAllProducts(request: Request, db: Session = Depends(get_db)):
 @param = [category, string, category of the product]
 -> """
 product_router.get("/all/category/{category}")
-
-
 @handle_request
 async def getAllProductsCategory(
     request: Request, category: str, db: Session = Depends(get_db)
@@ -210,8 +208,6 @@ async def getAllProductsCategory(
 @param = [subcategory, string, subcategory of the product]
 -> """
 product_router.get("/all/category/{category}/{subcategory}")
-
-
 @handle_request
 async def getAllProductsSubCategory(
     request: Request, category: str, subcategory: str, db: Session = Depends(get_db)
