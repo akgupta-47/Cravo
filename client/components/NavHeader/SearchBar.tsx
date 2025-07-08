@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input"
 
 export default function SearchBar() {
     return (
-        <div className="flex-1 max-w-lg mx-auto sm:hidden">
+        <div className="flex-1 max-w-lg mx-auto">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input

@@ -15,12 +15,12 @@ export default function Categories() {
     return (
         <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center space-x-8 py-4 overflow-x-auto">
+          <div className="grid grid-cols-4 sm:grid-cols-4 lg:grid-cols-10 gap-4 py-4">
             {categories.map((category, index) => (
               <div
                 key={index}
                 className={`flex flex-col items-center space-y-2 min-w-0 cursor-pointer group ${
-                  category.active ? "text-purple-600" : "text-gray-600 hover:text-green-600"
+                  category.active ? "text-yellow-600" : "text-gray-600 hover:text-green-600"
                 }`}
               >
                 <div

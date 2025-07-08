@@ -22,7 +22,7 @@ export default function Header() {
           {/* Location */}
           <LocationSelect />
 
-          <div className="sm:hidden sm:flex mx-auto">
+          <div className="hidden sm:hidden lg:flex w-80 mx-auto">
             <SearchBar />
           </div>
 
@@ -41,7 +41,7 @@ export default function Header() {
         </div>
 
         {/* Second Row (Search Bar for phone mode) */}
-        <div className="mt-2 sm:hidden">
+        <div className="mt-2 mb-4 sm:hidden">
           <SearchBar />
         </div>
       </div>
