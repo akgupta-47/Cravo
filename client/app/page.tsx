@@ -1,6 +1,6 @@
 import Header from "@/components/NavHeader/Header"
 import Categories from "@/components/Categories/Categories"
-import ProductList from "@/components/ProductList/ProductList"
+import ProductList from "@/components/Products/ProductList"
 
 
 export default function Page() {
