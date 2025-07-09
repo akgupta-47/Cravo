@@ -1,10 +1,20 @@
+"use client";
 import { ShoppingCart, User, MapPin, ChevronDown, Search } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import LocationSelect from './LocationSelect';
 import SearchBar from './SearchBar';
+import { useState } from 'react';
+import CartModal from '../Cart/CartModel';
 
 export default function Header() {
+  const [isCartModalOpen, setIsCartModalOpen] = useState(false);
+
+  const toggleCartModal = () => {
+    setIsCartModalOpen(!isCartModalOpen);
+  };
+  
   return (
+    <>    
     <header className="bg-white shadow-sm border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* First Row */}
@@ -29,7 +39,7 @@ export default function Header() {
           {/* Right side icons */}
           <div className="flex items-center ml-auto space-x-4">
             <div className="relative">
-              <ShoppingCart className="w-6 h-6 text-gray-600" />
+              <ShoppingCart className="w-6 h-6 text-gray-600" onClick={toggleCartModal}/>
               <Badge className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center p-0">
                 0
               </Badge>
@@ -46,5 +56,8 @@ export default function Header() {
         </div>
       </div>
     </header>
+
+    {isCartModalOpen && <CartModal onClose={toggleCartModal} />}
+    </>
   );
 }
