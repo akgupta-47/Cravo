@@ -5,4 +5,6 @@ export interface Product {
     description: string;
     price: string;
     image: string;
+    quantity?: number; // Optional for products in cart
+    unit?: string; // Optional for products in orders
 }
