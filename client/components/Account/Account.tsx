@@ -1,7 +1,30 @@
+"use client";
 import AccountSidebar from './AccountSidebar';
 import OrderList from '../Orders/OrderList';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import Addresses from '../Address/Addresses';
 
 export default function Account() {
+    const selectedSection = useSelector((state: RootState) => state.accountSidebar.selectedSection);
+
+    const renderContent = () => {
+        switch (selectedSection) {
+          case 'orders':
+            return <OrderList />;
+          case 'addresses':
+            return <Addresses />;
+          case 'profile':
+            return <></>;
+          case 'payment':
+            return <></>;
+          case 'help':
+            return <></>;
+          default:
+            return <OrderList />;
+        }
+      };
+    
     return (
       <div className="h-screen w-full flex bg-gray-100">
         {/* Card Container */}
@@ -13,7 +36,7 @@ export default function Account() {
   
           {/* Right Section (70%) */}
           <div className="w-2/3 p-6 flex flex-col space-y-6">
-            <OrderList />
+            {renderContent()}
           </div>
         </div>
       </div>
