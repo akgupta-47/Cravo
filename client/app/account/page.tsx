@@ -1,6 +1,4 @@
 import Header from "@/components/NavHeader/Header"
-import Categories from "@/components/Categories/Categories"
-import ProductList from "@/components/Products/ProductList"
 import Account from "@/components/Account/Account"
 
 

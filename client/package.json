@@ -2,11 +2,19 @@
   "name": "cravo",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "^18.18.0 || >=20.0.0",
+    "npm": ">=9.0.0",
+    "pnpm": ">=8.0.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "analyze": "ANALYZE=true next build",
+    "security-check": "npm audit --production"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -48,9 +56,9 @@
     "lucide-react": "^0.454.0",
     "next": "15.2.4",
     "next-themes": "^0.4.4",
-    "react": "^19",
+    "react": "^19.0.0",
     "react-day-picker": "8.10.1",
-    "react-dom": "^19",
+    "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.1",
     "react-redux": "^9.2.0",
     "react-resizable-panels": "^2.1.7",
@@ -62,11 +70,35 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@types/node": "^22",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "postcss": "^8.5",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "15.2.4",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-react": "^7.0.0",
+    "eslint-plugin-react-hooks": "^4.0.0",
+    "postcss": "^8.5.0",
+    "prettier": "^3.0.0",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5"
+    "typescript": "^5.0.0"
+  },
+  "browserslist": {
+    "production": [
+      "defaults",
+      "not IE 11",
+      "maintained node versions"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "resolutions": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   }
 }
