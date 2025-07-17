@@ -1,6 +1,47 @@
-#next
+# Next.js build output
+client/.next
+client/out
+
+# Node.js dependencies
 client/node_modules
 client/pnpm-lock.yaml
+
+# Logs
+client/npm-debug.log*
+client/yarn-debug.log*
+client/yarn-error.log*
+
+# Environment variables
+client/.env
+client/.env.local
+client/.env.development
+client/.env.test
+client/.env.production
+
+# Static files cache
+client/.turbo
+client/.vercel
+
+# Editor and system files
+client/.DS_Store
+client/.vscode
+client/.idea
+
+# Coverage reports
+client/coverage
+
+# Temporary files
+client/.cache
+client/dist
+client/tmp
+client/temp
+client/*.log
+
+# Test output
+client/junit.xml
+client/test-results.xml
+client/.jest-cache
+client/.jest-test-results.json
 
 #fastapi
 fastapi/__pycache__
