@@ -201,6 +201,24 @@ services:
       MONGODB_URL: ${MONGO_URL}
     profiles:
       - golang
+
+  cravo-ui:
+    image: cravo-ui
+    build:
+      context: ../client
+      dockerfile: ../client/Dockerfile
+    container_name: cravo-ui
+    ports:
+      - "3000:3000"
+    depends_on:
+      fastapi-pg:
+        condition: service_healthy
+      go-service:
+        condition: service_healthy
+      auth-service:
+        condition: service_healthy
+    networks:
+      - app
       
 networks:
   elastic:

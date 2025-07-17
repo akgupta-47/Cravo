@@ -1,5 +1,5 @@
 from datetime import datetime
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
 import redis
 from utils.ExceptionWrapper import handle_request
@@ -15,7 +15,7 @@ cart_router = APIRouter(prefix="/cart", tags=["Cart"])
 
 @cart_router.post("/add-to-cart")
 @handle_request
-async def save_cart(cart: CartSchema):
+async def save_cart(request: Request, cart: CartSchema):
 
     current_time = datetime.utcnow()  # Get the current UTC time in ISO 8601 format
     cart.created_at = (
@@ -115,7 +115,7 @@ async def save_cart(cart: CartSchema):
 
 @cart_router.get("/{user_id}")
 @handle_request
-async def get_cart(user_id: str) -> CartSchema:
+async def get_cart(request: Request, user_id: str) -> CartSchema:
     # Retrieve serialized data from Redis
     cart_data = redis_client.get(user_id)
     if not cart_data:
